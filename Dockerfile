@@ -21,7 +21,7 @@ LABEL org.opencontainers.image.title="Trackmania Server" \
 # user creation & base dir creation
 RUN set -eux; \
     addgroup -g 9999 trackmania && \
-    adduser -u 9999 -Hh /server -G trackmania -s /bin/ash -D trackmania && \
+    adduser -u 9999 -Hh /server -G trackmania -s /sbin/nologin -D trackmania && \
     install -d -o trackmania -g trackmania -m 775 /server
 
 WORKDIR /server
