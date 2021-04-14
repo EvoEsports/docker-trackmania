@@ -5,11 +5,18 @@ ARG TMSERVER_VERSION="2021-03-18"
 ARG GLIBC_VERSION="2.33-r0"
 ARG TMSERVER_URL="http://files.v04.maniaplanet.com/server/TrackmaniaServer_${TMSERVER_VERSION}.zip"
 ARG GLIBC_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk"
+ARG BUILD_DATE
+ARG REVISION
 
 # labels
-LABEL maintainer="nicolas.j.graf@gmail.com" \
-      description="Trackmania Server" \
-      version=${TMSERVER_VERSION}
+LABEL org.opencontainers.image.title="Trackmania Server" \
+      org.opencontainers.image.description="Server for the game Trackmania, released in 2020 by Nadeo." \
+      org.opencontainers.image.version=${TMSERVER_VERSION} \
+      org.opencontainers.image.created=${BUILD_DATE} \
+      org.opencontainers.image.authors="Nicolas Graf <nicolas.j.graf@gmail.com>" \
+      org.opencontainers.image.vendor="Evo" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.revision=${REVISION}
 
 # user creation & base dir creation
 RUN set -eux; \
