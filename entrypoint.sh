@@ -1,5 +1,6 @@
 #!/bin/bash
-set -eu
+
+set -e
 
 # we don't want to start the server with root permissions
 if [ "$1" = './TrackmaniaServer' -a "$(id -u)" = '0' ]; then
@@ -24,8 +25,12 @@ if [ "$1" = './TrackmaniaServer' ]; then
 	params+=(-u '/dedicated/system_config/xmlrpc_port' -v "5000")
 
 	# figure out if a server name is already set and use that one
-	serverName=$(xml sel -t -v '/dedicated/server_options/name' /server/UserData/Config/config.txt)
-	[[ -z $serverName ]] && params+=(-u '/dedicated/server_options/name' -v "$SERVER_NAME")
+	if [ -z "$(xml sel -t -v '/dedicated/server_options/name' /server/UserData/Config/config.txt)" ]
+	then
+    	echo "INFO: Server name not set, using '${SERVER_NAME:-AnotherDockerServer}' as servername!"
+		params+=(-u '/dedicated/server_options/name' -v "${SERVER_NAME:-YetAnotherDockerServer}")
+	fi
+	# [[ -z $serverName ]] && params+=(-u '/dedicated/server_options/name' -v "$SERVER_NAME")
 
 	# now populate it with docker envs and make sure the default ports are set
 	xml ed -P ${params[@]} /server/UserData/Config/config.txt > /server/UserData/Config/config.txt.tmp
