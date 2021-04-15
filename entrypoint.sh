@@ -23,6 +23,7 @@ if [ "$1" = './TrackmaniaServer' ]; then
 	params+=(-u '/dedicated/masterserver_account/password' -v "$MASTER_PASSWORD")
 	params+=(-u '/dedicated/system_config/server_port' -v "2350")
 	params+=(-u '/dedicated/system_config/xmlrpc_port' -v "5000")
+	params+=(-u '/dedicated/system_config/xmlrpc_allowremote' -v "${SYSTEM_XMLRPC_REMOTE:-True}")
 
 	# figure out if a server name is already set and use that one
 	if [ -z "$(xml sel -t -v '/dedicated/server_options/name' /server/UserData/Config/config.txt)" ]
@@ -30,7 +31,6 @@ if [ "$1" = './TrackmaniaServer' ]; then
     	echo "INFO: Server name not set, using '${SERVER_NAME:-AnotherDockerServer}' as servername!"
 		params+=(-u '/dedicated/server_options/name' -v "${SERVER_NAME:-YetAnotherDockerServer}")
 	fi
-	# [[ -z $serverName ]] && params+=(-u '/dedicated/server_options/name' -v "$SERVER_NAME")
 
 	# now populate it with docker envs and make sure the default ports are set
 	xml ed -P ${params[@]} /server/UserData/Config/config.txt > /server/UserData/Config/config.txt.tmp
