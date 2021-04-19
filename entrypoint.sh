@@ -45,7 +45,7 @@ if [ "$1" = './TrackmaniaServer' ]; then
 	# figure out if a server name is already set and use that one
 	if [ -z "$(xml sel -t -v '/dedicated/server_options/name' /server/UserData/Config/dedicated_cfg.txt)" ]
 	then
-    	echo "INFO: Server name not set, using '${SERVER_NAME:-AnotherDockerServer}' as servername!"
+    	echo "INFO: Server name not set, using '${SERVER_NAME:-YetAnotherDockerServer}' as servername!"
 		configs+=("'/dedicated/server_options/name' -v "${SERVER_NAME:-YetAnotherDockerServer}"")
 	fi
 
