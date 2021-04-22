@@ -1,22 +1,29 @@
 <p align="center">
   <img src="https://user-images.githubusercontent.com/4627720/115236133-493f3480-a11b-11eb-9dae-c2958d1bfbf1.png?raw=true" alt="Trackmania image" height="100"/>
 </p>
-
-<div align="center">
-  
-![Docker Stars](https://img.shields.io/docker/stars/evotm/trackmania?style=flat-square)
-![Docker Pulls](https://img.shields.io/docker/pulls/evotm/trackmania?style=flat-square)
-![Docker Image Version (latest semver)](https://img.shields.io/docker/v/evotm/trackmania?style=flat-square)
-![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/evotm/trackmania?style=flat-square)
-![Discord](https://img.shields.io/discord/384138149686935562?style=flat-square)
-  
-</div>
-
+<p align="center">
+    <a href="https://hub.docker.com/r/evotm/trackmania">
+        <img src="https://img.shields.io/docker/stars/evotm/trackmania?style=flat-square"
+            alt="docker stars"></a>
+    <a href="https://hub.docker.com/r/evotm/trackmania">
+        <img src="https://img.shields.io/docker/pulls/evotm/trackmania?style=flat-square"
+            alt="docker pulls"></a>
+    <a href="https://hub.docker.com/r/evotm/trackmania">
+        <img src="https://img.shields.io/docker/v/evotm/trackmania?style=flat-square"
+            alt="docker image version"></a>
+    <a href="https://hub.docker.com/r/evotm/trackmania">
+        <img src="https://img.shields.io/docker/image-size/evotm/trackmania?style=flat-square"
+            alt="docker image size"></a>
+    <a href="https://discord.gg/4PKKesS">
+        <img src="https://img.shields.io/discord/384138149686935562?style=flat-square"
+            alt="chat on Discord"></a>
+</p>
 This unoffical Docker image provides a TrackMania Server with the version depending on the image version.
 
 
 ## Getting Started
-### docker run
+### Examples
+#### docker run
 To start a TrackMania server where all data is stored in a named volume with docker run:
 ```shell
 docker run \
@@ -24,13 +31,13 @@ docker run \
   -e MASTER_PASSWORD='YourMasterserverPassword' \
   -p 2350:2350/tcp \
   -p 2350:2350/udp \
-  -p 5000:5000/tcp \
+  #-p 5000:5000/tcp \ # Be careful opening XMLRPC! Only if you really need to.
   -v UserData:/server/UserData \
   evotm/trackmania
 ```
 
 To do the same with docker compose:
-### docker compose
+#### docker compose
 ```yaml
 version: "3.8"
 services:
@@ -39,7 +46,7 @@ services:
     ports:
       - 2350:2350/udp
       - 2350:2350/tcp
-      - 5000:5000/tcp
+      #- 5000:5000/tcp # Be careful opening XMLRPC! Only if you really need to.
     environment:
       MASTER_LOGIN: "YourMasterserverLogin"
       MASTER_PASSWORD: "YourMasterserverPassword"
@@ -49,7 +56,7 @@ services:
 
 
 ### Environment Variables
-##### Required
+#### Required
 * `MASTER_LOGIN` - Your server login name. (e.g. 'yourcoolserverlogin')
 * `MASTER_PASSWORD` - Your server login password you got from the Trackmania player page. (e.g. 'YbL=.jIa-vZvIx5B')
 #### Optional
@@ -86,8 +93,8 @@ using docker run:
 ```
 using docker compose:
 ```yaml
-    volumes:
-      - UserData:/server/UserData
+volumes:
+  - UserData:/server/UserData
 ```
 
 #### Bind mount
@@ -98,6 +105,10 @@ using docker run:
 ```
 using docker compose:
 ```yaml
-    volumes:
-      - /path/on/your/host:/server/UserData
+volumes:
+  - /path/on/your/host:/server/UserData
 ```
+## Contributing
+If you have any questions, issues, bugs or suggestions, don't hesitate open an [Issue](https://github.com/EvoTM/docker-trackmania/issues/new)! You can also join our [Discord](https://discord.gg/4PKKesS) for questions.
+
+You may also help with development by creating a pull request.
