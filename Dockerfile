@@ -30,7 +30,7 @@ WORKDIR /server
 RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
     wget -q -O /etc/apk/glibc.apk ${GLIBC_URL} && \
     apk add /etc/apk/glibc.apk && \
-    apk add --no-cache xmlstarlet bash unzip curl jq su-exec netcat-openbsd && \
+    apk add --no-cache xmlstarlet bash unzip curl jq su-exec && \
     rm /etc/apk/glibc.apk
 
 # install server
