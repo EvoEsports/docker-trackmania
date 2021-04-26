@@ -30,7 +30,7 @@ WORKDIR /server
 RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
     wget -q -O /etc/apk/glibc.apk ${GLIBC_URL} && \
     apk add /etc/apk/glibc.apk && \
-    apk add --no-cache xmlstarlet bash unzip curl jq su-exec && \
+    apk add --no-cache xmlstarlet bash unzip curl jq su-exec netcat-openbsd && \
     rm /etc/apk/glibc.apk
 
 # install server
@@ -47,6 +47,9 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 EXPOSE 2350/tcp
 EXPOSE 2350/udp
 EXPOSE 5000/tcp
+
+HEALTHCHECK --interval=5s --timeout=5s --start-period=20s --retries=3 \
+    CMD nc -z -v 127.0.0.1 5000 || exit 1
 
 VOLUME [ "/server/UserData" ]
 
