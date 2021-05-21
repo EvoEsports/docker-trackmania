@@ -1,7 +1,7 @@
-FROM alpine:3.13.4
+FROM alpine:3.13.5
 
 # environment variables
-ARG TMSERVER_VERSION="2021-04-08"
+ARG TMSERVER_VERSION="2021-05-19"
 ARG GLIBC_VERSION="2.33-r0"
 ARG TMSERVER_URL="http://files.v04.maniaplanet.com/server/TrackmaniaServer_${TMSERVER_VERSION}.zip"
 ARG GLIBC_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk"
@@ -52,6 +52,9 @@ HEALTHCHECK --interval=5s --timeout=5s --start-period=20s --retries=3 \
     CMD nc -z -v 127.0.0.1 5000 || exit 1
 
 VOLUME [ "/server/UserData" ]
+
+# switch to non-root user
+USER trackmania
 
 # set entrypoint
 ENTRYPOINT [ "entrypoint.sh" ]

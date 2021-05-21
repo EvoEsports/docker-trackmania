@@ -18,6 +18,9 @@ if [ "$1" = './TrackmaniaServer' ]; then
 	# if no dedicated_cfg.txt is present, copy the defaults and create one
 	[ ! -f /server/UserData/Config/dedicated_cfg.txt ] && cp /server/UserData/Config/dedicated_cfg.default.txt /server/UserData/Config/dedicated_cfg.txt
 
+	# password escape workaround
+	MASTER_PASSWORD=$(echo ${MASTER_PASSWORD} | sed -e 's/\$/\\\\$/g' -e 's/`/\\`/g')
+
 	configs=()
 	# required settings
 	configs+=("'/dedicated/masterserver_account/login' -v \"${MASTER_LOGIN}\"")
