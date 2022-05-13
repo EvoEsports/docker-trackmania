@@ -14,7 +14,7 @@
     <a href="https://hub.docker.com/r/evotm/trackmania">
         <img src="https://img.shields.io/docker/image-size/evotm/trackmania?style=flat-square"
             alt="docker image size"></a>
-    <a href="https://discord.gg/4PKKesS">
+    <a href="https://discord.gg/evotm">
         <img src="https://img.shields.io/discord/384138149686935562?style=flat-square"
             alt="chat on Discord"></a>
 </p>
