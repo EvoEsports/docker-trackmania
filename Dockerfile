@@ -3,7 +3,7 @@ FROM alpine:3.13.5
 # environment variables
 ARG TMSERVER_VERSION="Latest"
 ARG GLIBC_VERSION="2.33-r0"
-ARG TMSERVER_URL="http://files.v04.maniaplanet.com/server/TrackmaniaServer_${TMSERVER_VERSION}.zip"
+ARG TMSERVER_URL="https://nadeo-download.cdn.ubi.com/trackmania/TrackmaniaServer_${TMSERVER_VERSION}.zip"
 ARG GLIBC_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk"
 ARG BUILD_DATE
 ARG REVISION
