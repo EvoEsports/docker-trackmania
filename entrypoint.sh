@@ -18,15 +18,13 @@ if [ "$1" = './TrackmaniaServer' ]; then
 	# if no dedicated_cfg.txt is present, copy the defaults and create one
 	[ ! -f /server/UserData/Config/dedicated_cfg.txt ] && cp /server/UserData/Config/dedicated_cfg.default.txt /server/UserData/Config/dedicated_cfg.txt
 
-	# password escape workaround
-	MASTER_PASSWORD=$(echo ${MASTER_PASSWORD} | sed -e 's/\$/\\\\$/g' -e 's/`/\\`/g')
-
 	configs=()
 	# required settings
-	configs+=("'/dedicated/masterserver_account/login' -v \"${MASTER_LOGIN}\"")
-	configs+=("'/dedicated/masterserver_account/password' -v \"${MASTER_PASSWORD}\"")
+	if [ "$MASTER_LOGIN" ]; then configs+=("'/dedicated/masterserver_account/login' -v \"${MASTER_LOGIN}\""); else echo "[ERROR] Masterserver login not set!"; exit 1; fi
+	if [ "$MASTER_PASSWORD" ]; then MASTER_PASSWORD=${MASTER_PASSWORD} | sed -e 's/\$/\\\$/g' -e 's/`/\\`/g'; configs+=("'/dedicated/masterserver_account/password' -v \"${MASTER_PASSWORD}\""); else echo "[ERROR] Masterserver password not set!"; exit 1; fi
 	configs+=("'/dedicated/system_config/server_port' -v \"2350\"")
 	configs+=("'/dedicated/system_config/xmlrpc_port' -v \"5000\"")
+
 	# optional settings
 	if [ "$PLAYERS_MAX" ]; then configs+=("'/dedicated/server_options/max_players' -v \"${PLAYERS_MAX}\""); fi
 	if [ "$PLAYERS_PASSWORD" ]; then configs+=("'/dedicated/server_options/password' -v \"${PLAYERS_PASSWORD}\""); fi
@@ -48,8 +46,8 @@ if [ "$1" = './TrackmaniaServer' ]; then
 	# figure out if a server name is already set and use that one
 	if [ -z "$(xml sel -t -v '/dedicated/server_options/name' /server/UserData/Config/dedicated_cfg.txt)" ]
 	then
-		echo "INFO: Server name not present in config, using '\"${SERVER_NAME:-YetAnotherDockerServer}\"' as servername!"
-		configs+=("'/dedicated/server_options/name' -v \"${SERVER_NAME:-YetAnotherDockerServer}\"")
+		echo "> Server name not present in config, using \"${SERVER_NAME:-Docker TrackMania Server}\" as servername!"
+		configs+=("'/dedicated/server_options/name' -v \"${SERVER_NAME:-Docker TrackMania Server}\"")
 	fi
 
 	# write config parameters into config file
@@ -59,6 +57,11 @@ if [ "$1" = './TrackmaniaServer' ]; then
 
 	# finally populate the MatchSettings file
 	[ ! -f /server/UserData/Maps/MatchSettings/default.txt ] && cp /server/UserData/Maps/MatchSettings/example.txt /server/UserData/Maps/MatchSettings/default.txt
+fi
+
+if [ "$PROMETHEUS_ENABLE" = true ]; then
+    echo "> Using Prometheus exporter."
+    /usr/local/bin/trackmania_exporter &
 fi
 
 exec "$@"
