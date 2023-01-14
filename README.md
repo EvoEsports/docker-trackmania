@@ -18,11 +18,11 @@
         <img src="https://img.shields.io/discord/384138149686935562?color=%235865F2&label=discord&logo=discord&logoColor=%23ffffff&style=flat-square"
             alt="chat on Discord"></a>
 </p>
-This image will start a TrackMania (2020) server. The image version indicated the server version and the -r0 prefix is the image release version which will increase if there are changes made to the image itself but the server version stays the same.
+This image will start a TrackMania (2020) server. The image version indicates the server version and the -r0 prefix is the image release version which will increase if there are changes made to the image itself but the server version stays the same.
 
 ## Table of Contents
 - [Table of Contents](#table-of-contents)
-- [How to us this image](#how-to-us-this-image)
+- [How to use this image](#how-to-use-this-image)
   - [... with 'docker run'](#-with-docker-run)
   - [... with 'docker compose'](#-with-docker-compose)
 - [Environment Variables](#environment-variables)
@@ -31,7 +31,7 @@ This image will start a TrackMania (2020) server. The image version indicated th
 - [Contributing](#contributing)
 
 
-## How to us this image
+## How to use this image
 ### ... with 'docker run'
 To start a TrackMania server with `docker run`:
 ```shell
