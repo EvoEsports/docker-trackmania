@@ -21,7 +21,7 @@ if [ "$1" = './TrackmaniaServer' ]; then
 	configs=()
 	# required settings
 	if [ "$MASTER_LOGIN" ]; then configs+=("'/dedicated/masterserver_account/login' -v \"${MASTER_LOGIN}\""); else echo "[ERROR] Masterserver login not set!"; exit 1; fi
-	if [ "$MASTER_PASSWORD" ]; then MASTER_PASSWORD=${MASTER_PASSWORD} | sed -e 's/\$/\\\$/g' -e 's/`/\\`/g'; configs+=("'/dedicated/masterserver_account/password' -v \"${MASTER_PASSWORD}\""); else echo "[ERROR] Masterserver password not set!"; exit 1; fi
+	if [ "$MASTER_PASSWORD" ]; then MASTER_PASSWORD=${MASTER_PASSWORD} | sed -e 's/\$/\\\\$/g' -e 's/`/\\`/g'; configs+=("'/dedicated/masterserver_account/password' -v \"${MASTER_PASSWORD}\""); else echo "[ERROR] Masterserver password not set!"; exit 1; fi
 	configs+=("'/dedicated/system_config/server_port' -v \"2350\"")
 	configs+=("'/dedicated/system_config/xmlrpc_port' -v \"5000\"")
 
