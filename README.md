@@ -88,7 +88,7 @@ The server only needs one volume to store your user data (e.g. maps, configs), w
 | `WORKERTHREADCOUNT`              | The maximum amount of CPU Threads the server can run on.                                                                      | 2                        |              |
 | `PACKETASSEMBLY_MULTITHREAD`     | If the server should use multithreading for packet assembly.                                                                  | True                     |              |
 | `FORCE_IP_ADDRESS`               | Usually the public IP of the server including the port. (e.g. 127.0.0.1:2350)[^2]                                             |                          |              |
-| `XMLRPC_ALLOWREMOTE`             | Controls if the server allows external connections to XMLRPC.                                                                 | True[^3]                 |              |
+| `XMLRPC_ALLOWREMOTE`             | Controls if the server allows external connections to XMLRPC.                                                                 | False[^3]                |              |
 | `DISABLE_COHERENCE_CHECKS`       | If the built-in anti-cheat is disabled.                                                                                       | False                    |              |
 | `DISABLE_REPLAY_RECORDING`       | If the replay recording is disabled.                                                                                          | False                    |              |
 | `SAVE_ALL_INDIVIDUAL_RUNS`       | If the server should save all individual runs.                                                                                | False                    |              |
