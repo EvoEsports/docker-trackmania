@@ -33,7 +33,7 @@ RUN true \
     && wget -q -O /etc/apk/glibc.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
     && apk upgrade \
     && apk add --force-overwrite --no-cache /etc/apk/glibc.apk xmlstarlet bash unzip curl jq su-exec \
-    && curl -so /server/server.zip http://files.v04.maniaplanet.com/server/TrackmaniaServer_${TMSERVER_VERSION}.zip \
+    && curl -so /server/server.zip https://nadeo-download.cdn.ubi.com/trackmania/TrackmaniaServer_${TMSERVER_VERSION}.zip \
     && unzip -q /server/server.zip \
     && rm -Rf /etc/apk/glibc.apk /server/server.zip /server/RemoteControlExamples /server/TrackmaniaServer.exe \
     && chown trackmania:trackmania -Rf /server \
