@@ -8,7 +8,7 @@ RUN apk upgrade && apk add binutils && pip3 install --root-user-action=ignore pr
 FROM alpine:3.17
 
 ARG GLIBC_VERSION="2.33-r0" \
-    TMSERVER_VERSION="2023-12-08" \
+    TMSERVER_VERSION="2023-12-20" \
     VERSION \
     BUILD_DATE \
     REVISION
