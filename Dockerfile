@@ -8,7 +8,7 @@ RUN apk upgrade && apk add binutils && pip3 install --root-user-action=ignore pr
 FROM alpine:3.17
 
 ARG GLIBC_VERSION="2.33-r0" \
-    TMSERVER_VERSION="2023-12-20" \
+    TMSERVER_VERSION="Latest" \
     VERSION \
     BUILD_DATE \
     REVISION
@@ -33,7 +33,7 @@ RUN true \
     && wget -q -O /etc/apk/glibc.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
     && apk upgrade \
     && apk add --force-overwrite --no-cache /etc/apk/glibc.apk xmlstarlet bash unzip curl jq su-exec \
-    && curl -so /server/server.zip https://nadeo-download.cdn.ubi.com/trackmania/TrackmaniaServer_${TMSERVER_VERSION}.zip \
+    && curl -so /server/server.zip http://files.v04.maniaplanet.com/server/TrackmaniaServer_${TMSERVER_VERSION}.zip \
     && unzip -q /server/server.zip \
     && rm -Rf /etc/apk/glibc.apk /server/server.zip /server/RemoteControlExamples /server/TrackmaniaServer.exe \
     && chown trackmania:trackmania -Rf /server \
