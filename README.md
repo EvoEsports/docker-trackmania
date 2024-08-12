@@ -2,23 +2,27 @@
   <img src="https://user-images.githubusercontent.com/4627720/115236133-493f3480-a11b-11eb-9dae-c2958d1bfbf1.png?raw=true" alt="Trackmania image" height="100"/>
 </p>
 <p align="center">
-    <a href="https://hub.docker.com/r/evotm/trackmania">
-        <img src="https://img.shields.io/docker/stars/evotm/trackmania?&style=flat-square"
+    <a href="https://hub.docker.com/r/evoesports/trackmania">
+        <img src="https://img.shields.io/docker/stars/evoesports/trackmania?&style=flat-square&color=%231D63ED&logo=docker&logoColor=%23ffffff"
             alt="docker stars"></a>
-    <a href="https://hub.docker.com/r/evotm/trackmania">
-        <img src="https://img.shields.io/docker/pulls/evotm/trackmania?style=flat-square"
+    <a href="https://hub.docker.com/r/evoesports/trackmania">
+        <img src="https://img.shields.io/docker/pulls/evoesports/trackmania?style=flat-square&color=%231D63ED&logo=docker&logoColor=%23ffffff"
             alt="docker pulls"></a>
-    <a href="https://hub.docker.com/r/evotm/trackmania">
-        <img src="https://img.shields.io/docker/v/evotm/trackmania?style=flat-square"
+    <a href="https://hub.docker.com/r/evoesports/trackmania">
+        <img src="https://img.shields.io/docker/v/evoesports/trackmania?style=flat-square&color=%231D63ED&logo=docker&logoColor=%23ffffff"
             alt="docker image version"></a>
-    <a href="https://hub.docker.com/r/evotm/trackmania">
-        <img src="https://img.shields.io/docker/image-size/evotm/trackmania?style=flat-square"
+    <a href="https://hub.docker.com/r/evoesports/trackmania">
+        <img src="https://img.shields.io/docker/image-size/evoesports/trackmania?style=flat-square&color=%231D63ED&logo=docker&logoColor=%23ffffff"
             alt="docker image size"></a>
-    <a href="https://discord.gg/evotm">
+    <a href="https://discord.gg/evoesports">
         <img src="https://img.shields.io/discord/384138149686935562?color=%235865F2&label=discord&logo=discord&logoColor=%23ffffff&style=flat-square"
             alt="chat on Discord"></a>
+    <a href="https://evoesports.gg/">
+        <img src="https://custom-icon-badges.demolab.com/badge/-Made%20by%20Evo-blue?style=flat-square&logo=evoesports-p&logoColor=%23FF0058&color=%23222222"
+            alt="evo website"></a>
 </p>
-This image will start a TrackMania (2020) server. The image version indicates the server version and the -r0 prefix is the image release version which will increase if there are changes made to the image itself but the server version stays the same.
+
+This Docker image provides an easy and efficient way to deploy a Trackmania game server. It allows for quick setup, customizable configurations, and supports persistent storage to retain server data across restarts. With this image, you can effortlessly manage your Trackmania server using Docker’s containerization benefits.
 
 ## Table of Contents
 - [Table of Contents](#table-of-contents)
@@ -36,72 +40,92 @@ This image will start a TrackMania (2020) server. The image version indicates th
 To start a TrackMania server with `docker run`:
 ```shell
 docker run \
-  -e MASTER_LOGIN='YourMasterserverLogin' \
-  -e MASTER_PASSWORD='YourMasterserverPassword' \
+  -e TM_MASTERSERVER_LOGIN='YourMasterserverLogin' \
+  -e TM_MASTERSERVER_PASSWORD='YourMasterserverPassword' \
   -p 2350:2350/tcp \
   -p 2350:2350/udp \
   #-p 5000:5000/tcp \ # Be careful opening XMLRPC! Only if you really need to.
-  #-p 9000:9000/tcp \ # For the prometheus exporter. Usually not needed, only if Prometheus is running not on the same host.
+  #-p 9000:9000/tcp \ # For the prometheus exporter.
   -v UserData:/server/UserData \
-  evotm/trackmania:latest
+  evoesports/trackmania:latest
 ```
 
 ### ... with 'docker compose'
-To do the same with `docker compose`:
+Here is the `compose.yml`:
 ```yaml
-version: "3.8"
 services:
   trackmania:
-    image: evotm/trackmania:latest
+    image: evoesports/trackmania:latest
     ports:
       - 2350:2350/udp
       - 2350:2350/tcp
       #- 5000:5000/tcp # Be careful opening XMLRPC! Only if you know what you're doing.
-      #- 9000:9000/tcp # For the prometheus exporter. Usually not needed at all.
+      #- 9000:9000/tcp # For the prometheus exporter.
     environment:
-      MASTER_LOGIN: "YourMasterserverLogin"
-      MASTER_PASSWORD: "YourMasterserverPassword"
+      TM_MASTERSERVER_LOGIN: "YourMasterserverLogin"
+      TM_MASTERSERVER_PASSWORD: "YourMasterserverPassword"
     volumes:
       - UserData:/server/UserData
 volumes:
   UserData:
 ```
 In both cases, the server will launch and be bound to port 2350 TCP & UDP. Port 5000 (XMLRPC) & 9000 (Prometheus metrics) won't usually be forwarded to the host, because apps who need it (e.g. server controllers) are supposed to run in the same stack.
-You need to provide server credentials you can register [here](https://players.trackmania.com/server/dedicated), and put the login into the `MASTER_LOGIN` variable, and the password into the `MASTER_PASSWORD` variable.
+You need to provide server credentials you can register [here](https://players.trackmania.com/server/dedicated), and put the login into the `TM_MASTERSERVER_LOGIN` variable, and the password into the `TM_MASTERSERVER_PASSWORD` variable.
 The server only needs one volume to store your user data (e.g. maps, configs), which is mounted to /server/UserData. You can also use bind mounts.
 
 ## Environment Variables
-| **Environment Variable**         | **Description**                                                                                                               | **Default Value**[^1]    | **Required** |
-|----------------------------------|-------------------------------------------------------------------------------------------------------------------------------|--------------------------|:------------:|
-| `MASTER_LOGIN`                   | Your server login name. (e.g. 'yourcoolserverlogin')                                                                          |                          |       ✔      |
-| `MASTER_PASSWORD`                | Your server login password you got from the Trackmania player page.                                                           |                          |       ✔      |
-| `SERVER_NAME`                    | The server name. (Only used once if there's no server name already set in the server config file.)                            | Docker TrackMania Server |              |
-| `PLAYERS_MAX`                    | Max amount of players the server can have.                                                                                    | 32                       |              |
-| `PLAYERS_PASSWORD`               | The password the players have to enter upon joining the server.                                                               |                          |              |
-| `SPECTATORS_MAX`                 | Max amount of spectators a server can have.                                                                                   | 32                       |              |
-| `SPECTATORS_PASSWORD`            | The password the spectators have to enther upon joining the server.                                                           |                          |              |
-| `ALLOW_MAP_DOWNLOAD`             | If it's allowed for players to download the server maps.                                                                      | False                    |              |
-| `AUTOSAVE_REPLAYS`               | If the server saves replays automatically.                                                                                    | False                    |              |
-| `AUTOSAVE_VALIDATION_REPLAYS`    | If the server saves validation replays automatically.                                                                         | False                    |              |
-| `CONNECTION_UPLOADRATE`          | The maximal upload speed the server is able to use.                                                                           | 102400                   |              |
-| `CONNECTION_DOWNLOADRATE`        | The maximal download speed the server is able to use.                                                                         | 102400                   |              |
-| `WORKERTHREADCOUNT`              | The maximum amount of CPU Threads the server can run on.                                                                      | 2                        |              |
-| `PACKETASSEMBLY_MULTITHREAD`     | If the server should use multithreading for packet assembly.                                                                  | True                     |              |
-| `FORCE_IP_ADDRESS`               | Usually the public IP of the server including the port. (e.g. 127.0.0.1:2350)[^2]                                             |                          |              |
-| `XMLRPC_ALLOWREMOTE`             | Controls if the server allows external connections to XMLRPC.                                                                 | False[^3]                |              |
-| `DISABLE_COHERENCE_CHECKS`       | If the built-in anti-cheat is disabled.                                                                                       | False                    |              |
-| `DISABLE_REPLAY_RECORDING`       | If the replay recording is disabled.                                                                                          | False                    |              |
-| `SAVE_ALL_INDIVIDUAL_RUNS`       | If the server should save all individual runs.                                                                                | False                    |              |
-| `DEDICATED_CFG`                  | In case you created your own server config and want to use that one instead.                                                  | dedicated_cfg.txt        |              |
-| `GAME_SETTINGS`                  | In case you created your own matchsettings and want to use that one instead.                                                  | default.txt              |              |
-| `PROMETHEUS_ENABLE`              | Enable the Prometheus Trackmania exporter.                                                                                    | False                    |              |
-| `PROMETHEUS_PORT`                | The port the Prometheus Trackmania exporter will listen on.                                                                   | 9000                     |              |
-| `PROMETHEUS_SUPERADMIN_PASSWORD` | The SuperAdmin password the Prometheus exporter needs in case it got changed.                                                 | SuperAdmin               |              |
-| `PROMETHEUS_INTERVAL`            | The interval the prometheus exporter gets the metrics from the TrackMania server.                                             | 15                       |              |
-[^1]: Default value of this docker image. Does not represent the defaults by the TrackMania server provided by Ubisoft Nadeo.
-[^2]: If left unset, the TrackMania server will report the Docker internal IP address to the masterserver, which will prevent people from connecting to it.
-[^3]: `True` here doesn't mean anyone can connect to the XMLRPC interface. It just allows connections from other containers to be made to it, for example from server controllers like EvoSC or PyPlanet.
-
+Below is a list of all possible environment variables that can be set through Docker.
+| **Environment Variable**                         | **Description**                                                                                                                             | **Default Value**[^1]    |
+|--------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
+| `TM_AUTHORIZATION_SUPERADMIN_PASSWORD`           | Sets the password for the SuperAdmin access level, granting the highest level of permissions.                                               | SuperAdmin               |
+| `TM_AUTHORIZATION_ADMIN_PASSWORD`                | Sets the password for the Admin access level, granting intermediate-level permissions.                                                      | Admin                    |
+| `TM_AUTHORIZATION_USER_PASSWORD`                 | Sets the password for the User access level, granting basic user permissions.                                                               | User                     |
+| `TM_MASTERSERVER_LOGIN`                          | The login name for the server account on the Trackmania master server (e.g., 'yourcoolserverlogin'). If not specified, the server starts in LAN mode. |                          |
+| `TM_MASTERSERVER_PASSWORD`                       | The password associated with the server's master server account, obtained from the Trackmania player page.                                  |                          |
+| `TM_SERVER_NAME`                                 | The display name of the server as seen by players. Only used if no server name is set in the server config file.                            | Docker TrackMania Server |
+| `TM_SERVER_COMMENT`                              | A description or comment about the server, shown to players in server listings.                                                             |                          |
+| `TM_SERVER_MAX_PLAYERS`                          | The maximum number of players that can join the server simultaneously.                                                                      | 32                       |
+| `TM_SERVER_PASSWORD`                             | Password required for players to join the server, if set.                                                                                   |                          |
+| `TM_SERVER_MAX_SPECTATORS`                       | The maximum number of spectators that can watch the server's matches.                                                                       | 32                       |
+| `TM_SERVER_PASSWORD_SPECTATOR`                   | Password required for spectators to join the server, if set.                                                                                |                          |
+| `TM_SERVER_KEEP_PLAYER_SLOTS`                    | If `True`, keeps a player's slot and records/points when they switch to spectator mode.                                                     | False                    |
+| `TM_SERVER_CALLVOTE_TIMEOUT`                     | Duration in milliseconds before a callvote expires if no decision is reached.                                                               | 60000                    |
+| `TM_SERVER_CALLVOTE_RATIO`                       | The minimum percentage of 'Yes' votes needed for a callvote to pass.                                                                        | 0.5                      |
+| `TM_SERVER_CALLVOTE_RATIOS`                      | Specify a list of ratios. For example `Ban:-1 Kick:-1`                                                                                      |                          |
+| `TM_SERVER_ALLOW_MAP_DOWNLOAD`                   | If `True`, allows players to download maps directly from the server.                                                                        | False                    |
+| `TM_SERVER_AUTOSAVE_REPLAYS`                     | If `True`, the server will automatically save replays of each match.                                                                        | False                    |
+| `TM_SERVER_AUTOSAVE_VALIDATION_REPLAYS`          | If `True`, the server will automatically save replays used for map validation.                                                              | False                    |
+| `TM_SERVER_USE_CHANGING_VALIDATION_SEED`         | If `True`, uses a dynamic seed for server-side validation checks to enhance security.                                                       | False                    |
+| `TM_SERVER_DISABLE_PROFILE_SKINS`                | If `True`, disables the use of custom player skins, enforcing default skins for all players.                                                | False                    |
+| `TM_SERVER_CLIENTINPUTS_MAXLATENCY`              | Sets the maximum latency (in milliseconds) allowed for client inputs before the server simulates physics without new inputs. If the server doesn’t receive inputs within this time frame due to lag, it assumes the player's inputs remain unchanged or maintains their last known position. This setting directly impacts players with high ping, as exceeding this value can disrupt their gameplay or lead to inaccurate physics calculations. [^2]                                                     | 200                      |
+| `TM_SYSTEM_CONNECTION_UPLOADRATE`                | The maximum upload speed (in bytes per second) the server can utilize.                                                                      | 102400                   |
+| `TM_SYSTEM_CONNECTION_DOWNLOADRATE`              | The maximum download speed (in bytes per second) the server can utilize.                                                                    | 102400                   |
+| `TM_SYSTEM_WORKERTHREADCOUNT`                    | Specifies the number of CPU threads that the server can use to perform its tasks.[^2]                                                       | 2                        |
+| `TM_SYSTEM_PACKETASSEMBLY_MULTITHREAD`           | If `True`, enables the server to assemble data packets using multiple threads for improved performance.[^2]                                 | True                     |
+| `TM_SYSTEM_PACKETASSEMBLY_PACKETSPERFRAME`       | This setting determines how many smaller "heartbeat" packets the server sends per frame, containing only essential network information and player inputs. These packets are less costly for the server to send but offer limited benefits in improving gameplay performance. The impact of this setting can vary depending on the server’s configuration and network conditions, so it’s recommended to experiment with different values to find the optimal balance for your specific situation.[^2]                                     | 60                       |
+| `TM_SYSTEM_PACKETASSEMBLY_FULLPACKETSPERFRAME`   | This setting defines how many full data packets the server prepares and sends to clients per frame. Each packet includes game mode options, checkpoint times, and other relevant data. Preparing these packets is resource-intensive because the server must analyze all changes since the last packet and decide what information to send to each player. If the setting is too low, it can create a "virtual ping," as players might experience an artificial delay in receiving updates. Therefore, it’s essential to balance this setting to optimize server performance and client experience without overloading the server.[^2]                            | 30                       |
+| `TM_SYSTEM_DELAYEDVISUALS_S2C_SENDINGRATE`       | This setting determines the frequency at which the server sends player position data to all clients when CrudeExtrapolation is enabled. Adjusting this rate affects the visual display of opponents in the game. While a higher rate can make player movements appear smoother, it can also increase the server's bandwidth usage. If performance issues arise or optimization is needed, consider lowering this rate first, as the visual display of opponents is less critical than gameplay mechanics.[^2]                             | 32                       |
+| `TM_SYSTEM_TRUSTCLIENTSIMU_C2S_SENDINGRATE`      | This setting controls how often clients send their physics simulation results and inputs to the server. A higher rate ensures smoother physics calculations by reducing the wait time for player inputs, leading to a more responsive game experience. However, this comes at the cost of increased server bandwidth usage and higher client CPU demand due to packet compression. A balance must be struck to optimize both gameplay quality and resource usage, as beyond a certain point, further increasing the rate yields minimal gameplay benefits while significantly increasing resource consumption.[^2]                      | 64                       |
+| `TM_SYSTEM_FORCE_IP_ADDRESS`                     | Forces the server to bind to a specific IP address and port (e.g., `127.0.0.1:2350`).[^3]                                                   |                          |
+| `TM_SYSTEM_BIND_IP_ADDRESS`                      | Specifies the IP address that the server should bind to for incoming connections.                                                           |                          |
+| `TM_SYSTEM_USE_NAT_UPNP`                         | If `True`, allows the server to use NAT traversal via UPnP for better connectivity in complex network setups.                               |                          |
+| `TM_SYSTEM_XMLRPC_ALLOWREMOTE`                   | If `True`, permits the server to accept external connections via XML-RPC for remote management and integration.                             | False[^4]                |
+| `TM_SYSTEM_BLACKLIST_URL`                        | URL pointing to a remote blacklist of banned players, which the server uses to enforce bans.                                                |                          |
+| `TM_SYSTEM_GUESTLIST_FILENAME`                   | The filename of the guest list, which contains users who are allowed special access or privileges on the server.                            |                          |
+| `TM_SYSTEM_BLACKLIST_FILENAME`                   | The filename of the blacklist, containing the names of players who are banned from the server.                                              |                          |
+| `TM_SYSTEM_DISABLE_COHERENCE_CHECKS`             | If `True`, disables the built-in anti-cheat measures, allowing more flexibility but less security.                                          | False                    |
+| `TM_SYSTEM_DISABLE_REPLAY_RECORDING`             | If `True`, disables the recording of replays, potentially improving performance but losing gameplay records.                                | False                    |
+| `TM_SYSTEM_SAVE_ALL_INDIVIDUAL_RUNS`             | If `True`, saves the replay of each individual player's run, useful for detailed analysis and reviews.                                      | False                    |
+| `TM_DEDICATED_CFG`                               | Specifies a custom server configuration file to use instead of the default settings.                                                        | dedicated_cfg.txt        |
+| `TM_GAME_SETTINGS`                               | Specifies a custom match settings file to use, allowing detailed control over game rules and behavior.                                      | default.txt              |
+| `PROMETHEUS_ENABLE`                              | If `True`, enables the Prometheus exporter for monitoring the server, providing performance metrics and stats.                              | False                    |
+| `PROMETHEUS_PORT`                                | The network port on which the Prometheus exporter listens for requests, used for gathering server metrics.                                  | 9000                     |
+| `PROMETHEUS_SUPERADMIN_PASSWORD`                 | The SuperAdmin password required by the Prometheus exporter to authenticate and access the server metrics if the default was changed.       | SuperAdmin               |
+| `PROMETHEUS_INTERVAL`                            | The frequency, in seconds, at which the Prometheus exporter collects metrics from the Trackmania server.                                    | 15                       |
+[^1]: Default values are specific to this Docker image setup and may differ from those provided by the official TrackMania server from Ubisoft Nadeo.
+[^2]: More information to this can be gathered from the Trackmania Wiki page about the [Dedicated Config](https://wiki.trackmania.io/en/dedicated-server/Usage/DedicatedConfig).
+[^3]: If not set, the TrackMania server may report its internal Docker IP address to the master server, which can prevent external users from connecting to it.
+[^4]: Setting this to `True` allows only other Docker containers, such as server controllers like EvoSC or PyPlanet, to connect to the XML-RPC interface, not public external connections.
 
 ## Features
 ### Prometheus Exporter

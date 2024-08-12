@@ -5,7 +5,7 @@ import time
 import os
 
 # connect to xmlrpc
-gbxremote = GbxRemote(host='127.0.0.1', port=5000, user='SuperAdmin', password=os.environ.get('PROMETHEUS_SUPERADMIN_PASSWORD', 'SuperAdmin'))
+gbxremote = GbxRemote(host='127.0.0.1', port=os.environ.get('TM_SYSTEM_XMLRPC_PORT', 5000), user='SuperAdmin', password=os.environ.get('TM_AUTHORIZATION_SUPERADMIN_PASSWORD', 'SuperAdmin'))
 
 gbxconnected = False
 while not gbxconnected:
@@ -36,7 +36,7 @@ TRACKMANIA_NET_RATE_SEND = Gauge('trackmania_net_rate_send', 'Connection rate ou
 TRACKMANIA_MAPS_COUNT = Gauge('trackmania_maps_count', 'Amount of maps the server currently has loaded.')
 TRACKMANIA_PLAYER_MAX = Gauge('trackmania_player_max', 'Max configured amount of players the server can hold.', ['type'])
 
-# update function, to be called every 10 seconds
+# update function, to be called every x seconds
 def update():
     response0 = gbxremote.callMethod('GetPlayerList', -1, 0)
     response1 = gbxremote.callMethod('GetBanList', -1, 0)
