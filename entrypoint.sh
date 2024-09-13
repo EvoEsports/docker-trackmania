@@ -116,20 +116,20 @@ if [ "$1" = './TrackmaniaServer' ]; then
 		hostname=$(uname -n)
 		if [ "$TM_SERVER_NAME_OVERWRITE" = true ]; then
 			if [ "$TM_SERVER_NAME" ]; then
-				echo "SERVER_NAME will be removed soon. Please use TM_SERVER_NAME"
 				echo "[-] Server name not present in config, using \"${TM_SERVER_NAME:-Docker TrackMania Server ${hostname}}\" as servername!"
 				configs+=("'/dedicated/server_options/name' -v \"${TM_SERVER_NAME:-Docker TrackMania Server ${hostname}}\"")
 			elif [ "$SERVER_NAME" ]; then
+			    echo "SERVER_NAME will be removed soon. Please use TM_SERVER_NAME"
 				echo "[-] Server name not present in config, using \"${SERVER_NAME:-Docker TrackMania Server ${hostname}}\" as servername!"
 				configs+=("'/dedicated/server_options/name' -v \"${SERVER_NAME:-Docker TrackMania Server ${hostname}}\"")
 			fi
 		else
 			if [ -z "$(xml sel -t -v '/dedicated/server_options/name' /server/UserData/Config/"${DC:-dedicated_cfg.txt}")" ]; then
 				if [ "$TM_SERVER_NAME" ]; then
-					echo "SERVER_NAME will be removed soon. Please use TM_SERVER_NAME"
 					echo "[-] Server name not present in config, using \"${TM_SERVER_NAME:-Docker TrackMania Server ${hostname}}\" as servername!"
 					configs+=("'/dedicated/server_options/name' -v \"${TM_SERVER_NAME:-Docker TrackMania Server ${hostname}}\"")
 				elif [ "$SERVER_NAME" ]; then
+				    echo "SERVER_NAME will be removed soon. Please use TM_SERVER_NAME"
 					echo "[-] Server name not present in config, using \"${SERVER_NAME:-Docker TrackMania Server ${hostname}}\" as servername!"
 					configs+=("'/dedicated/server_options/name' -v \"${SERVER_NAME:-Docker TrackMania Server ${hostname}}\"")
 				fi
