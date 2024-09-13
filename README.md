@@ -69,6 +69,12 @@ services:
 volumes:
   UserData:
 ```
+
+> [!NOTE]  
+> On certain host systems, such as Fedora, you need to configure the SELinux label `:z` for the volume mounted into `/server/UserData`.
+> This prevents `Permission denied` and `cp: Cannot stat` errors, as by default SELinux will not allow the Docker container to read/write from/to the volume.
+> You can find more information about this [in the Docker documentation](https://docs.docker.com/engine/storage/bind-mounts/#configure-the-selinux-label).
+
 In both cases, the server will launch and be bound to port 2350 TCP & UDP. Port 5000 (XMLRPC) & 9000 (Prometheus metrics) won't usually be forwarded to the host, because apps who need it (e.g. server controllers) are supposed to run in the same stack.
 You need to provide server credentials you can register [here](https://players.trackmania.com/server/dedicated), and put the login into the `TM_MASTERSERVER_LOGIN` variable, and the password into the `TM_MASTERSERVER_PASSWORD` variable.
 The server only needs one volume to store your user data (e.g. maps, configs), which is mounted to /server/UserData. You can also use bind mounts.
