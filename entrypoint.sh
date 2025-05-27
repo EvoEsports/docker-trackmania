@@ -103,6 +103,7 @@ if [ "$1" = './TrackmaniaServer' ]; then
 		if [ "$TM_SYSTEM_BIND_IP_ADDRESS" ]; then configs+=("'/dedicated/system_config/bind_ip_address' -v \"${TM_SYSTEM_BIND_IP_ADDRESS}\""); fi
 		if [ "$TM_SYSTEM_USE_NAT_UPNP" ]; then configs+=("'/dedicated/system_config/use_nat_upnp' -v \"${TM_SYSTEM_USE_NAT_UPNP}\""); fi
 		if [ "$TM_SYSTEM_XMLRPC_ALLOWREMOTE" ]; then configs+=("'/dedicated/system_config/xmlrpc_allowremote' -v \"${TM_SYSTEM_XMLRPC_ALLOWREMOTE}\""); fi
+  		if [ "$TM_SYSTEM_XMLRPC_PORT" ]; then configs+=("'/dedicated/system_config/xmlrpc_port' -v \"${TM_SYSTEM_XMLRPC_PORT}\""); fi
 		if [ "$TM_SYSTEM_BLACKLIST_URL" ]; then configs+=("'/dedicated/system_config/blacklist_url' -v \"${TM_SYSTEM_BLACKLIST_URL}\""); fi
 		if [ "$TM_SYSTEM_GUESTLIST_FILENAME" ]; then configs+=("'/dedicated/system_config/guestlist_filename' -v \"${TM_SYSTEM_GUESTLIST_FILENAME}\""); fi
 		if [ "$TM_SYSTEM_BLACKLIST_FILENAME" ]; then configs+=("'/dedicated/system_config/blacklist_filename' -v \"${TM_SYSTEM_BLACKLIST_FILENAME}\""); fi
