@@ -1,14 +1,22 @@
 # build trackmania_exporter
-FROM python:3.11-alpine3.17 AS exporter-build
+FROM python:3.14.3-alpine3.23 AS exporter-build
 WORKDIR /build
-COPY trackmania_exporter .
-RUN apk upgrade && apk add binutils && pip3 install --root-user-action=ignore prometheus-client pyinstaller && pyinstaller --onefile --console --clean --strip trackmania_exporter.py
+
+RUN apk upgrade && apk add binutils upx && pip3 install --no-cache-dir uv
+
+COPY trackmania_exporter/uv.lock .
+COPY trackmania_exporter/pyproject.toml .
+
+RUN uv sync --group build
+
+COPY trackmania_exporter/*.py .
+
+RUN uv run pyinstaller --onefile --console --clean --strip trackmania_exporter.py
 
 # build trackmania image
-FROM alpine:3.17
+FROM alpine:3.23
 
-ARG GLIBC_VERSION="2.33-r0" \
-    TMSERVER_VERSION="Latest" \
+ARG TMSERVER_VERSION="Latest" \
     VERSION \
     BUILD_DATE \
     REVISION
@@ -24,20 +32,17 @@ LABEL org.opencontainers.image.title="Trackmania Server" \
 
 WORKDIR /server
 
-RUN true \
-    && set -eux \
+RUN set -eux \
     && addgroup -g 9999 trackmania \
     && adduser -u 9999 -Hh /server -G trackmania -s /sbin/nologin -D trackmania \
     && install -d -o trackmania -g trackmania -m 775 /server \
-    && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-    && wget -q -O /etc/apk/glibc.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
-    && apk upgrade \
-    && apk add --force-overwrite --no-cache /etc/apk/glibc.apk xmlstarlet bash unzip curl jq su-exec \
-    && curl -so /server/server.zip http://files.v04.maniaplanet.com/server/TrackmaniaServer_${TMSERVER_VERSION}.zip \
+    && apk upgrade --no-cache \
+    && apk add --no-cache xmlstarlet unzip su-exec gcompat bash \
+    && wget -q -O /server/server.zip http://files.v04.maniaplanet.com/server/TrackmaniaServer_${TMSERVER_VERSION}.zip \
     && unzip -q /server/server.zip \
-    && rm -Rf /etc/apk/glibc.apk /server/server.zip /server/RemoteControlExamples /server/TrackmaniaServer.exe \
+    && rm -Rf /server/server.zip /server/RemoteControlExamples /server/TrackmaniaServer.exe \
     && chown trackmania:trackmania -Rf /server \
-    && true
+    && apk del unzip
 
 COPY --chmod=0755 entrypoint.sh /usr/local/bin/
 COPY --chmod=0755 --from=exporter-build /build/dist/trackmania_exporter /usr/local/bin/

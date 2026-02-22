@@ -177,7 +177,7 @@ if [ "$1" = './TrackmaniaServer' ]; then
 fi
 
 # fire up the promehteus exporter
-if [ "$PROMETHEUS_ENABLE" = true ]; then
+if [ "$PROMETHEUS_ENABLE" = true ] || [ "$PROMETHEUS_ENABLE" = True ]; then
     echo "[+] Using Prometheus exporter."
     /usr/local/bin/trackmania_exporter &
 fi
